@@ -26,7 +26,7 @@ namespace UnitTestProject
             var existingUser = new User
             {
                 Id = 1,
-                Username = "john_doe",
+                Username = "xyztest",
                 Password = "password123"
             };
 

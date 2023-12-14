@@ -1,7 +1,10 @@
-﻿namespace TestWebApiApp.Core.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TestWebApiApp.Core.Models
 {
     public class User
     {
+        [Key]
         public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
