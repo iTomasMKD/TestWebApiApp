@@ -1,63 +1,100 @@
-﻿using FluentValidation.TestHelper;
+﻿using AutoMapper;
+using FluentValidation;
 using Moq;
 using TestWebApiApp.Core.Commands;
 using TestWebApiApp.Core.Handlers;
 using TestWebApiApp.Core.Models;
 using TestWebApiApp.Core.Repository;
-using TestWebApiApp.Core.Validators;
 
 namespace UnitTestProject
 {
-    public class UserUpdateCommandHandlerTest
+    [TestFixture]
+    public class UpdateUserHandlerTests
     {
+        private UpdateUserHandler _handler;
+        private Mock<IUserRepository> _userRepositoryMock;
+        private Mock<IValidator<UpdateUserCommand>> _validatorMock;
+        private Mock<IMapper> _mapperMock;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _userRepositoryMock = new Mock<IUserRepository>();
+            _validatorMock = new Mock<IValidator<UpdateUserCommand>>();
+            _mapperMock = new Mock<IMapper>();
+
+            _handler = new UpdateUserHandler(_userRepositoryMock.Object, _validatorMock.Object, _mapperMock.Object);
+        }
+
         [Test]
-        public async Task UpdateUserHandler_ValidCommand_ShouldUpdateUser()
+        public async Task Handle_ValidCommand_ShouldUpdateUser()
         {
             // Arrange
-            var userRepositoryMock = new Mock<IUserRepository>();
-            var validator = new UpdateUserValidator();
-
             var updateUserCommand = new UpdateUserCommand
             {
                 UserId = 1,
-                NewUsername = "updated_username"
+                // Other properties to update...
             };
 
             var existingUser = new User
             {
-                Id = 1,
-                Username = "xyztest",
-                Password = "password123"
+                // Populate existing user properties...
             };
 
-            userRepositoryMock.Setup(repo => repo.GetByIdAsync(1, CancellationToken.None))
+            _validatorMock.Setup(validator => validator.ValidateAsync(updateUserCommand, CancellationToken.None))
+                .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+
+            _userRepositoryMock.Setup(repo => repo.GetByIdAsync(updateUserCommand.UserId, CancellationToken.None))
                 .ReturnsAsync(existingUser);
 
-            var handler = new UpdateUserHandler(userRepositoryMock.Object, validator);
-
             // Act
-            await handler.Handle(updateUserCommand, CancellationToken.None);
+            await _handler.Handle(updateUserCommand, CancellationToken.None);
 
             // Assert
-            userRepositoryMock.Verify(repo => repo.UpdateAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mapperMock.Verify(mapper => mapper.Map(updateUserCommand, existingUser), Times.Once);
+            _userRepositoryMock.Verify(repo => repo.UpdateAsync(existingUser, CancellationToken.None), Times.Once);
         }
 
         [Test]
-        public void UpdateUserValidator_InvalidCommand_ShouldHaveValidationErrors()
+        public async Task Handle_InvalidCommand_ShouldThrowValidationException()
         {
             // Arrange
-            var validator = new UpdateUserValidator();
             var updateUserCommand = new UpdateUserCommand
             {
-                // Missing required properties to trigger validation errors
+                UserId = 1,
+                // Other properties to update...
             };
 
+            var validationErrors = new FluentValidation.Results.ValidationResult(new[] { new FluentValidation.Results.ValidationFailure("Property", "Invalid value") });
+            _validatorMock.Setup(validator => validator.ValidateAsync(updateUserCommand, CancellationToken.None))
+                .ReturnsAsync(validationErrors);
+
+            // Act and Assert
+            Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(updateUserCommand, CancellationToken.None));
+        }
+
+        [Test]
+        public async Task Handle_UserNotFound_ShouldNotUpdateUser()
+        {
+            // Arrange
+            var updateUserCommand = new UpdateUserCommand
+            {
+                UserId = 1,
+                // Other properties to update...
+            };
+
+            _validatorMock.Setup(validator => validator.ValidateAsync(updateUserCommand, CancellationToken.None))
+                .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+
+            _userRepositoryMock.Setup(repo => repo.GetByIdAsync(updateUserCommand.UserId, CancellationToken.None))
+                .ReturnsAsync((User)null); // Simulate user not found
+
             // Act
-            var result = validator.TestValidate(updateUserCommand);
+            await _handler.Handle(updateUserCommand, CancellationToken.None);
 
             // Assert
-            result.ShouldHaveValidationErrorFor(x => x.UserId);
-            result.ShouldHaveValidationErrorFor(x => x.NewUsername);
+            _mapperMock.Verify(mapper => mapper.Map(It.IsAny<UpdateUserCommand>(), It.IsAny<User>()), Times.Never);
+            _userRepositoryMock.Verify(repo => repo.UpdateAsync(It.IsAny<User>(), CancellationToken.None), Times.Never);
         }
     }
 }
