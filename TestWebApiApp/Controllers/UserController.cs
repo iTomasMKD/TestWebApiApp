@@ -11,6 +11,7 @@ namespace TestWebApiApp.Controllers
     [ApiController]
     public class UserController(IMediator _mediator) : ControllerBase
     {
+        //in the Net 8 and c# 12 we can inject services directly in the class brackets for Dependency Injection
         //private readonly IMediator _mediator;
 
         //public UserController(IMediator mediator)
