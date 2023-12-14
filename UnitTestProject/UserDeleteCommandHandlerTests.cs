@@ -1,8 +1,11 @@
-﻿using System;
+﻿using FluentValidation.TestHelper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestWebApiApp.Core.Commands;
+using TestWebApiApp.Core.Validators;
 
 namespace UnitTestProject
 {
