@@ -1,12 +1,13 @@
-﻿using TestWebApiApp.Core.Commands;
+﻿using AutoMapper;
+using TestWebApiApp.Core.Commands;
 using TestWebApiApp.Core.DTO;
 using TestWebApiApp.Core.Models;
 
 namespace TestWebApiApp.Core.Mappings
 {
-    public class UserMap : User
+    public class UserMap : Profile
     {
-        public UserProfile()
+        public UserMap()
         {
             CreateMap<User, UserDto>();
             CreateMap<CreateUserCommand, User>();

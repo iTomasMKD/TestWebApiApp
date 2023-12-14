@@ -28,7 +28,8 @@ namespace TestWebApiApp.Core.Handlers
             // Business logic and user deletion
             await _userRepository.DeleteAsync(request.UserId, cancellationToken);
 
-
+            return Unit.Value;
         }
-    }
+    }     
+    
 }

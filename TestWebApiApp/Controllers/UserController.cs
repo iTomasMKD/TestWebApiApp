@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TestWebApiApp.Core.Commands;
@@ -62,12 +63,17 @@ namespace TestWebApiApp.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(DeleteUserCommand deleteUserCommand)
         {
-            // Implement delete user logic
-            // ...
+            // The 'deleteUserCommand' parameter is automatically populated by the model binder
 
-            return Ok("User deleted successfully");
+            // Use MediatR to handle the command
+            await _mediator.Send(deleteUserCommand);
+
+            // Handle the result and return an appropriate response
+
+            return Ok();
         }
+
     }
 }

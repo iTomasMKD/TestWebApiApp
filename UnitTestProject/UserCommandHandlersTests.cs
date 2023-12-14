@@ -1,4 +1,10 @@
-﻿namespace UnitTestProject
+﻿using Moq;
+using TestWebApiApp.Core.Commands;
+using TestWebApiApp.Core.Handlers;
+using TestWebApiApp.Core.Repository;
+using TestWebApiApp.Core.Validators;
+
+namespace UnitTestProject
 {
     [TestFixture]
     public class UserCommandHandlersTests

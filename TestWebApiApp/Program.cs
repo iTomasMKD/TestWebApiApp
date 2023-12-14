@@ -2,6 +2,7 @@ using Cqrs.Hosts;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TestWebApiApp.Core.Models;
 using TestWebApiApp.Core.Repository;
 using TestWebApiApp.Core.Validators;
@@ -26,6 +27,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddAutoMapper(typeof(User));
 builder.Services.AddMediatR(typeof(StartUp));
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddOptionsWithValidateOnStart<CreateUserValidator>();
