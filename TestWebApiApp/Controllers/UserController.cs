@@ -26,12 +26,21 @@ namespace TestWebApiApp.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] User user)
+        public IActionResult Login([FromBody] User user, [FromServices] IMediator mediator)
         {
-            // Implement user login logic
-            // ...
+            // Create a LoginCommand
+            var loginCommand = new LoginCommand
+            {
+                Username = user.Username,
+                Password = user.Password
+            };
 
-            return Ok("User login successful");
+            // Use MediatR to handle the command
+            var result = mediator.Send(loginCommand);
+
+            // Handle the result and return an appropriate response
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
