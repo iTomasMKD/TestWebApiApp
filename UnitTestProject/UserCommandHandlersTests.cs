@@ -1,6 +1,8 @@
-﻿using Moq;
+﻿using FluentValidation.TestHelper;
+using Moq;
 using TestWebApiApp.Core.Commands;
 using TestWebApiApp.Core.Handlers;
+using TestWebApiApp.Core.Models;
 using TestWebApiApp.Core.Repository;
 using TestWebApiApp.Core.Validators;
 

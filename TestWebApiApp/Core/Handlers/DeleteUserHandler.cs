@@ -30,6 +30,11 @@ namespace TestWebApiApp.Core.Handlers
 
             return Unit.Value;
         }
+
+        Task IRequestHandler<DeleteUserCommand>.Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }     
     
 }

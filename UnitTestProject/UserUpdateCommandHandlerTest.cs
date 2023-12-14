@@ -1,10 +1,5 @@
 ﻿using FluentValidation.TestHelper;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TestWebApiApp.Core.Commands;
 using TestWebApiApp.Core.Handlers;
 using TestWebApiApp.Core.Models;
