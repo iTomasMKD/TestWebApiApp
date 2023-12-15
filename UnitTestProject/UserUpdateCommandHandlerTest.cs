@@ -93,8 +93,16 @@ namespace UnitTestProject
             await _handler.Handle(updateUserCommand, CancellationToken.None);
 
             // Assert
-            _mapperMock.Verify(mapper => mapper.Map(It.IsAny<UpdateUserCommand>(), It.IsAny<User>()), Times.Never);
-            _userRepositoryMock.Verify(repo => repo.UpdateAsync(It.IsAny<User>(), CancellationToken.None), Times.Never);
+            _mapperMock.Verify(mapper =>
+                               mapper.Map(It.IsAny<UpdateUserCommand>(),
+                                          It.IsAny<User>()),
+                                          Times.Never);
+
+            _userRepositoryMock.Verify(repo =>
+                                       repo.UpdateAsync(
+                                           It.IsAny<User>(),
+                                           CancellationToken.None),
+                                           Times.Never);
         }
     }
 }
