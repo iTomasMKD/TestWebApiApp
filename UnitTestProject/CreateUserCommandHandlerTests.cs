@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TestWebApiApp.Core.Commands;
 using TestWebApiApp.Core.Handlers;
 using TestWebApiApp.Core.Models;
@@ -14,7 +9,7 @@ using TestWebApiApp.Core.Repository;
 namespace UnitTestProject
 {
     [TestFixture]
-    public class CreateUserHandlerTests
+    public class CreateUserCommandHandlerTests
     {
         private CreateUserHandler _handler;
         private Mock<IUserRepository> _userRepositoryMock;
@@ -64,7 +59,9 @@ namespace UnitTestProject
                 Password = "invalid" // Invalid password for testing validation failure
             };
 
-            var validationErrors = new FluentValidation.Results.ValidationResult(new[] { new FluentValidation.Results.ValidationFailure("Password", "Invalid password") });
+            var validationErrors = new FluentValidation.Results.ValidationResult(new[] 
+                { new FluentValidation.Results.ValidationFailure("Password", "Invalid password") });
+
             _validatorMock.Setup(validator => validator.ValidateAsync(createUserCommand, CancellationToken.None))
                 .ReturnsAsync(validationErrors);
 

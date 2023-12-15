@@ -4,7 +4,7 @@ using TestWebApiApp.Core.Validators;
 
 namespace UnitTestProject
 {
-    public class UserDeleteCommandHandlerTests
+    public class DeleteUserCommandHandlerTests
     {
         [Test]
         public void DeleteUserValidator_ValidCommand_ShouldNotHaveValidationErrors()

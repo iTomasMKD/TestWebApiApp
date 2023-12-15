@@ -4,7 +4,7 @@ using TestWebApiApp.Infrastructure;
 
 namespace TestWebApiApp.Core.Repository
 {
-    public class UserRepository(ApplicationDbContext _context) : IUserRepository
+    public class UserRepository(ApplicationDbContext _context) : IUserRepository //Net 8 c#12 DI inject in the class brackets
     {
         //private readonly ApplicationDbContext _context;
 
